@@ -1,42 +1,29 @@
-import { ShaderRenderer } from './shader-renderer.js';
+import { transform } from "./pose.js";
 
 class FilterStream {
-  constructor(stream, shader) {
-    console.log("New Filter for stream", stream);
+  constructor(stream) {
     this.stream = stream;
     const video = document.createElement("video");
-    const canvas = document.createElement("canvas");
-    this.canvas = canvas;
-    this.renderer = new ShaderRenderer(this.canvas, video, shader);
 
-    video.addEventListener("playing", () => {
-      // Use a 2D Canvas.
-      // this.canvas.width = this.video.videoWidth;
-      // this.canvas.height = this.video.videoHeight;
-
-      // Use a WebGL Renderer.
-      this.renderer.setSize(this.video.videoWidth, this.video.videoHeight);
-      this.update();
-    });
     video.srcObject = stream;
-    video.autoplay = true;
     this.video = video;
-    //this.ctx = this.canvas.getContext('2d');
-    this.outputStream = this.canvas.captureStream();
   }
 
-  update() {
-    // Use a 2D Canvas
-    // this.ctx.filter = 'invert(1)';
-    // this.ctx.drawImage(this.video, 0, 0);
-    // this.ctx.fillStyle = '#ff00ff';
-    // this.ctx.textBaseline = 'top';
-    // this.ctx.fillText('Virtual', 10, 10)
+  async setupStream() {
+    console.log("Starting up video stream");
+    await this.videoIsReady();
+    console.log("Video stream is active");
 
-    // Use a WebGL renderer.
-    this.renderer.render();
-    requestAnimationFrame(() => this.update());
+    return transform(this.video);
+  }
+
+  videoIsReady() {
+    return new Promise((resolve, reject) => {
+      this.video.addEventListener("playing", resolve);
+      this.video.addEventListener("error", reject);
+      this.video.play();
+    });
   }
 }
 
-export { FilterStream }
+export { FilterStream };
