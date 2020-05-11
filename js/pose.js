@@ -15,29 +15,29 @@
  * =============================================================================
  */
 
-import * as posenet_module from '@tensorflow-models/posenet';
-import * as facemesh_module from '@tensorflow-models/facemesh';
-import * as tf from '@tensorflow/tfjs';
-import * as paper from 'paper';
+import * as posenet_module from "@tensorflow-models/posenet";
+import * as facemesh_module from "@tensorflow-models/facemesh";
+import * as tf from "@tensorflow/tfjs";
+import * as paper from "paper";
 
 // pose-animator uses flatten() when they should use flat()
-if (typeof Array.prototype.flatten === 'undefined') {
+if (typeof Array.prototype.flatten === "undefined") {
   Array.prototype.flatten = Array.prototype.flat;
 }
 
-import { drawKeypoints, drawPoint, drawSkeleton } from 'pose-animator/utils/demoUtils';
-import { SVGUtils } from 'pose-animator/utils/svgUtils';
-import { PoseIllustration } from 'pose-animator/illustrationGen/illustration';
-import { Skeleton, facePartName2Index } from 'pose-animator/illustrationGen/skeleton';
+import { drawKeypoints, drawPoint, drawSkeleton } from "pose-animator/utils/demoUtils";
+import { SVGUtils } from "pose-animator/utils/svgUtils";
+import { PoseIllustration } from "pose-animator/illustrationGen/illustration";
+import { Skeleton, facePartName2Index } from "pose-animator/illustrationGen/skeleton";
 
-import * as girlSVG from 'pose-animator/resources/illustration/girl.svg';
-import * as boySVG from 'pose-animator/resources/illustration/boy.svg';
-import * as abstractSVG from 'pose-animator/resources/illustration/abstract.svg';
-import * as blathersSVG from 'pose-animator/resources/illustration/blathers.svg';
-import * as tomNookSVG from 'pose-animator/resources/illustration/tom-nook.svg';
-import * as glassesSVG from '../resources/body.svg';
+import * as girlSVG from "pose-animator/resources/illustration/girl.svg";
+import * as boySVG from "pose-animator/resources/illustration/boy.svg";
+import * as abstractSVG from "pose-animator/resources/illustration/abstract.svg";
+import * as blathersSVG from "pose-animator/resources/illustration/blathers.svg";
+import * as tomNookSVG from "pose-animator/resources/illustration/tom-nook.svg";
+import * as glassesSVG from "../resources/body.svg";
 
-import background from '../resources/background.jpg';
+import background from "../resources/background.jpg";
 
 // Camera stream video element
 let video;
@@ -66,10 +66,10 @@ const avatarSvgs = {
   boy: boySVG.default,
   abstract: abstractSVG.default,
   blathers: blathersSVG.default,
-  'tom-nook': tomNookSVG.default,
+  "tom-nook": tomNookSVG.default,
 };
 
-const defaultPoseNetArchitecture = 'MobileNetV1';
+const defaultPoseNetArchitecture = "MobileNetV1";
 const defaultQuantBytes = 2;
 const defaultMultiplier = 0.75;
 const defaultStride = 16;
@@ -77,7 +77,7 @@ const defaultInputResolution = 200;
 
 function drawBackground() {
   const originalOperation = outputContext.globalCompositeOperation;
-  outputContext.globalCompositeOperation = 'destination-over';
+  outputContext.globalCompositeOperation = "destination-over";
   outputContext.drawImage(background, 0, 0, canvasWidth, canvasHeight);
   outputContext.globalCompositeOperation = originalOperation;
 }
@@ -87,8 +87,8 @@ function drawBackground() {
  * happens. This function loops with a requestAnimationFrame method.
  */
 function detectPoseInRealTime(video) {
-  const canvas = document.createElement('canvas');
-  const videoCtx = canvas.getContext('2d');
+  const canvas = document.createElement("canvas");
+  const videoCtx = canvas.getContext("2d");
 
   canvas.width = videoWidth;
   canvas.height = videoHeight;
@@ -147,17 +147,12 @@ function detectPoseInRealTime(video) {
 
 function setupCanvas() {
   canvasScope = paper.default;
-  let canvas = document.createElement('canvas');
+  let canvas = document.createElement("canvas");
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
   outputCanvas = canvas;
-  outputContext = canvas.getContext('2d');
+  outputContext = canvas.getContext("2d");
   canvasScope.setup(canvas);
-
-  const bg = new canvasScope.Raster({
-    source: background,
-    position: canvasScope.view.center,
-  });
 }
 
 async function parseSVG(target) {
