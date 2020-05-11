@@ -19,6 +19,7 @@ import * as posenet_module from '@tensorflow-models/posenet';
 import * as facemesh_module from '@tensorflow-models/facemesh';
 import * as tf from '@tensorflow/tfjs';
 import * as paper from 'paper';
+import Stats from 'stats.js';
 
 // pose-animator uses flatten() when they should use flat()
 if (typeof Array.prototype.flatten === 'undefined') {
@@ -57,6 +58,9 @@ let posenet;
 let minPartConfidence = 0.1;
 let nmsRadius = 30.0;
 
+let isDebugging = true;
+const stats = new Stats();
+
 // Misc
 const avatarSvgs = {
   girl: girlSVG.default,
@@ -73,6 +77,13 @@ const defaultMultiplier = 0.75;
 const defaultStride = 16;
 const defaultInputResolution = 200;
 
+// for debugging
+function setupFPS() {
+  stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+  document.body.appendChild(stats.dom);
+  console.log('displaying FPS graph');
+}
+
 function drawBackground() {
   const originalOperation = outputContext.globalCompositeOperation;
   // draw background behind the body
@@ -87,6 +98,8 @@ function drawBackground() {
  */
 function detectPoseInRealTime(video) {
   async function poseDetectionFrame() {
+    stats.begin();
+
     drawBackground();
 
     videoCtx.clearRect(0, 0, videoWidth, videoHeight);
@@ -132,6 +145,9 @@ function detectPoseInRealTime(video) {
       new canvasScope.Point(-150, 0) // centered-ish
     );
 
+    // End monitoring code for frames per second
+    stats.end();
+
     requestAnimationFrame(poseDetectionFrame);
   }
 
@@ -165,6 +181,10 @@ async function parseSVG(target) {
 export async function transform(video) {
   setupOutputCanvas();
   setupVideoCanvas();
+
+  if (isDebugging) {
+    setupFPS();
+  }
 
   video.width = videoWidth;
   video.height = videoHeight;
