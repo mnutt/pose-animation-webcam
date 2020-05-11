@@ -1,8 +1,8 @@
-# virtual-webcam chrome extension
+# virtual-webcam pose-animation webextension
 
 This is a proof of concept of adding a virtual MediaDevice in a browser extension, with pose-animation.
 
-![Virtual webcam](shader-cam.png)
+![Virtual webcam](screenshot.png)
 
 To use (Chromium):
 
@@ -25,7 +25,7 @@ To use (Firefox):
 - Browse to the folder with the extension and select the manifest.json
 - Note:Pages will need to be reloaded after an extension is installed to be able to use it
 
-Now any (most) pages using getUserMedia should be able to see a "Chrome Virtual Webcam" device
+Now any (most) pages using getUserMedia should be able to see a "Virtual Webcam" device
 
 Should work on Chromium based browsers that support extensions.
 
