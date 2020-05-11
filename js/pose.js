@@ -73,7 +73,7 @@ const avatarSvgs = {
 
 const defaultPoseNetArchitecture = 'MobileNetV1';
 const defaultQuantBytes = 2;
-const defaultMultiplier = 0.75;
+const defaultMultiplier = 1.0;
 const defaultStride = 16;
 const defaultInputResolution = 200;
 
@@ -198,7 +198,9 @@ export async function transform(video) {
     quantBytes: defaultQuantBytes,
   });
 
-  facemesh = await facemesh_module.load();
+  facemesh = await facemesh_module.load({
+    maxFaces: 1,
+  });
   await parseSVG(Object.values(avatarSvgs)[1]);
 
   detectPoseInRealTime(video, posenet);
